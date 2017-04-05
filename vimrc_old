@@ -1,0 +1,709 @@
+""""""""""""""""""""""""""""""""
+"slang 根据 .vimrc_base 修改而来
+""""""""""""""""""""""""""""""""
+
+"set fileencodings=ucs-bom,utf-8,cp936,latin1
+set fileencodings=utf-8,gbk,ucs-bom,latin1
+set nocompatible
+ 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" VIM userinterface
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"Set 7 lines to the curors - when moving vertical..
+set so=7
+
+"Turn on WiLd menu, 命令行的提示菜单 
+set wildmenu
+
+"Always show current position
+set ruler
+
+"The commandbar is 2 high
+set cmdheight=2
+
+"Show line number
+set nu
+
+"Do not redraw, when running macros.. lazyredraw
+set lz
+
+"Change buffer - without saving
+set hid
+
+"Set backspace
+set backspace=eol,start,indent
+
+"Bbackspace and cursor keys wrap to
+set whichwrap+=<,>,h,l
+
+"Set magic on
+set magic
+
+" <c-p> and <c-n> tips
+set completeopt=menu
+
+"No sound on errors.
+set noerrorbells
+set novisualbell
+set t_vb=
+
+"highlight search
+set incsearch
+set hlsearch
+
+
+" it is very stange when i use 'vi' to new open a buffer when t_Co=256 is
+" closed, hlsearch, incsearch bgcolor is ok，when open t_Co=256, and source
+" the .vimrc is open, hl, inc search color bg lose! but reclose t_Co=256 and
+" source the .vimrc, the bgcolor would not come back! holy strange!!!  but
+" when you close the editor and use 'vi' reopen then file, bg color come back!
+" 256 color
+set t_Co=256 
+
+"Sets how many lines of history VIM har to remember
+set history=400
+
+"Enable filetype plugin
+filetype plugin on
+filetype indent on
+
+syntax enable
+set background=light
+colorscheme desert
+
+"Use the arrows to something usefull
+map <right> :bn<cr>
+map <left> :bp<cr>
+
+"leader mappings"
+
+"Set mapleader
+let mapleader = ","
+let g:mapleader = ","
+
+"Fast saving
+nmap <leader>w :w!<cr>
+nmap <leader>f :!find 
+
+"Fast reloading of the .vimrc
+map <leader>s :source ~/.vimrc<cr>
+"Fast editing of .vimrc
+map <leader>e :e! ~/.vimrc<cr>
+"When .vimrc is edited, reload it
+autocmd! bufwritepost vimrc source ~/vim_local/vimrc
+
+""""""""""""""""""""""""""""""
+" Visual
+""""""""""""""""""""""""""""""
+" From an idea by Michael Naumann
+function! VisualSearch(direction) range
+  let l:saved_reg = @"
+  execute "normal! vgvy"
+  let l:pattern = escape(@", '\\/.*$^~[]')
+  let l:pattern = substitute(l:pattern, "\n$", "", "")
+  if a:direction == 'b'
+    execute "normal ?" . l:pattern . "^M"
+  else
+    execute "normal /" . l:pattern . "^M"
+  endif
+  let @/ = l:pattern
+  let @" = l:saved_reg
+endfunction
+
+"Basically you press * or # to search for the current selection !! Really useful
+vnoremap <silent> * :call VisualSearch('f')<CR>
+vnoremap <silent> # :call VisualSearch('b')<CR>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Moving around and tabs
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"Map space to / and c-space to ?
+map <space> /
+map <c-space> ?
+
+"Smart way to move btw. windows
+"map <C-j> <C-W>j
+"map <C-k> <C-W>k
+"map <C-h> <C-W>h
+"map <C-l> <C-W>l
+
+"Tab configuration
+map <leader>tn :tabnew %<cr>
+map <leader>te :tabedit
+map <leader>tc :tabclose<cr>
+map <leader>tm :tabmove
+try
+  set switchbuf=usetab
+  set stal=2
+catch
+endtry
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" General Autocommands
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"Switch to current dir
+map <leader>cd :cd %:p:h<cr>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Parenthesis/bracket expanding
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+vnoremap $1 <esc>`>a)<esc>`<i(<esc>
+")
+vnoremap $2 <esc>`>a]<esc>`<i[<esc>
+vnoremap $3 <esc>`>a}<esc>`<i{<esc>
+vnoremap $$ <esc>`>a"<esc>`<i"<esc>
+vnoremap $q <esc>`>a'<esc>`<i'<esc>
+vnoremap $w <esc>`>a"<esc>`<i"<esc>
+
+"Map auto complete of (, ", ', [
+inoremap $1 ()<esc>:let leavechar=")"<cr>i
+inoremap $2 []<esc>:let leavechar="]"<cr>i
+inoremap $4 {<esc>o}<esc>:let leavechar="}"<cr>O
+inoremap $3 {}<esc>:let leavechar="}"<cr>i
+inoremap $q ''<esc>:let leavechar="'"<cr>i
+inoremap $w ""<esc>:let leavechar='"'<cr>i
+au BufNewFile,BufRead *.\(vim\)\@! inoremap " ""<esc>:let leavechar='"'<cr>i
+au BufNewFile,BufRead *.\(txt\)\@! inoremap ' ''<esc>:let leavechar="'"<cr>i
+
+imap <m-l> <esc>:exec "normal f" . leavechar<cr>a
+imap <d-l> <esc>:exec "normal f" . leavechar<cr>a
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" General Abbrevs
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"My information
+iab xdate <c-r>=strftime("%d/%m/%y %H:%M:%S")<cr>
+iab xname slang
+
+"Move a line of text using control
+nmap <M-j> mz:m+<cr>`z
+nmap <M-k> mz:m-2<cr>`z
+vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
+vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
+
+"python delete white space of end of line
+func! DeleteTrailingWS()
+  exe "normal mz"
+  %s/\s\+$//ge
+  exe "normal `z"
+endfunc
+autocmd BufWrite *.py :call DeleteTrailingWS()
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Command-line config
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+func! Cwd()
+  let cwd = getcwd()
+  return "e " . cwd 
+endfunc
+
+func! DeleteTillSlash()
+  let g:cmd = getcmdline()
+  if MySys() == "linux" || MySys() == "mac"
+    let g:cmd_edited = substitute(g:cmd, "\\(.*\[/\]\\).*", "\\1", "")
+  else
+    let g:cmd_edited = substitute(g:cmd, "\\(.*\[\\\\]\\).*", "\\1", "")
+  endif
+  if g:cmd == g:cmd_edited
+    if MySys() == "linux" || MySys() == "mac"
+      let g:cmd_edited = substitute(g:cmd, "\\(.*\[/\]\\).*/", "\\1", "")
+    else
+      let g:cmd_edited = substitute(g:cmd, "\\(.*\[\\\\\]\\).*\[\\\\\]", "\\1", "")
+    endif
+  endif
+  return g:cmd_edited
+endfunc
+
+func! CurrentFileDir(cmd)
+  return a:cmd . " " . expand("%:p:h") . "/"
+endfunc
+
+"Smart mappings on the command line
+cno $h e ~/
+cno $d e ~/Desktop/
+cno $j e ./
+
+cno $q <C-\>eDeleteTillSlash()<cr>
+
+cno $c e <C-\>eCurrentFileDir("e")<cr>
+
+cno $tc <C-\>eCurrentFileDir("tabnew")<cr>
+cno $th tabnew ~/
+cno $td tabnew ~/Desktop/
+
+"Bash like
+cnoremap <C-A>    <Home>
+cnoremap <C-E>    <End>
+cnoremap <C-K>    <C-U>
+
+
+"Restore cursor to file position in previous editing session
+set viminfo='10,\"100,:20,%,n~/.viminfo
+au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|else|exe "norm $"|endif|endif
+
+" Don't close window, when deleting a buffer
+command! Bclose call <SID>BufcloseCloseIt()
+
+function! <SID>BufcloseCloseIt()
+   let l:currentBufNum = bufnr("%")
+   let l:alternateBufNum = bufnr("#")
+
+   if buflisted(l:alternateBufNum)
+     buffer #
+   else
+     bnext
+   endif
+
+   if bufnr("%") == l:currentBufNum
+     new
+   endif
+
+   if buflisted(l:currentBufNum)
+     execute("bdelete! ".l:currentBufNum)
+   endif
+endfunction
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Files and backups
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"Turn backup off
+set nobackup
+set nowb
+set noswapfile
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Folding
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"Enable folding, I find it very useful
+set nofen
+set fdl=0
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Text options
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set noexpandtab
+set shiftwidth=2
+set tabstop=2
+
+map <leader>t2 :set shiftwidth=2<cr>
+map <leader>t4 :set shiftwidth=4<cr>
+au FileType html,python,vim,javascript setl shiftwidth=4
+au FileType html,python,vim,javascript setl tabstop=4
+au FileType java,c,h,cpp,hpp,lua,pto,tbl,php setl shiftwidth=4
+au FileType java,c,h,cpp,hpp,lua,pto,tbl,php setl tabstop=4
+"au FileType java,php setl shiftwidth=4
+"au FileType java,php setl tabstop=4
+
+set smarttab
+set lbr
+set tw=500
+
+   """"""""""""""""""""""""""""""
+   " Indent
+   """"""""""""""""""""""""""""""
+   "Auto indent
+   set ai
+
+   "Smart indet
+   set si
+
+   "C-style indeting
+   set cindent
+
+   "Wrap lines
+   set wrap
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Spell checking
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map <leader>sn ]s
+map <leader>sp [s
+map <leader>sa zg
+map <leader>s? z=
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin configuration
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+  """"""""""""""""""""""""""""""
+  " Statusline
+  """"""""""""""""""""""""""""""
+  "Always hide the statusline
+  set laststatus=2
+
+  function! CurDir()
+     let curdir = substitute(getcwd(), '/Users/amir/', "~/", "g")
+     return curdir
+  endfunction
+
+  "Format the statusline
+  set statusline=\ %F%m%r%h\ %w\ Line:\ %l/%L:%c
+
+
+   """"""""""""""""""""""""""""""
+   " Minibuffer
+   """"""""""""""""""""""""""""""
+   let g:miniBufExplModSelTarget = 1
+   let g:miniBufExplMapWindowNavVim = 1
+   let g:miniBufExplMapCTabSwitchBufs = 1 
+   let g:miniBufExplMapWindowNavArrows = 1 
+   let g:miniBufExplSplitBelow = 1
+   let g:bufExplorerSortBy = "name"
+   autocmd BufRead,BufNew :call UMiniBufExplorer
+   nmap <leader><Tab> :bn<cr>
+   nmap <leader>k :bp<cr>
+   nmap <leader>,, :b 1<cr>
+   nmap <leader>,2 :b 2<cr>
+   nmap <leader>3 :b 3<cr>
+   nmap <leader>4 :b 4<cr>
+   nmap <leader>5 :b 5<cr>
+   nmap <leader>6 :b 6<cr>
+   nmap <leader>7 :b 7<cr>
+   nmap <leader>8 :b 8<cr>
+   nmap <leader>9 :b 9<cr>
+   nmap <leader>10 :b 10<cr>
+   nmap <leader>11 :b 11<cr>
+   nmap <leader>12 :b 12<cr>
+   nmap <leader>13 :b 13<cr>
+   nmap <leader>14 :b 14<cr>
+   nmap <leader>15 :b 15<cr>
+   nmap <leader>16 :b 16<cr>
+   nmap <leader>17 :b 17<cr>
+   nmap <leader>18 :b 18<cr>
+   nmap <leader>19 :b 19<cr>
+   nmap <leader>20 :b 20<cr>
+   nmap <leader>21 :b 21<cr>
+   nmap <leader>22 :b 22<cr>
+   nmap <leader>23 :b 23<cr>
+   nmap <leader>24 :b 24<cr>
+   nmap <leader>25 :b 25<cr>
+   nmap <leader>26 :b 26<cr>
+   nmap <leader>27 :b 27<cr>
+   nmap <leader>28 :b 28<cr>
+   nmap <leader>29 :b 29<cr>
+
+   """"""""""""""""""""""""""""""
+   " Tag list (ctags) - not used
+   """"""""""""""""""""""""""""""
+   let Tlist_Use_Right_Window=1
+   let Tlist_File_Fold_Auto_Close=1
+   let Tlist_Ctags_Cmd = "/usr/local/bin/exctags"
+   "let Tlist_Sort_Type = "name"
+   "let Tlist_Show_Menu = 1
+   map <leader>t :Tlist<cr>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Filetype generic
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+   """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+   " Todo
+   """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+   au BufNewFile,BufRead *.todo so ~/vim_local/syntax/amido.vim
+
+   """"""""""""""""""""""""""""""
+   " VIM
+   """"""""""""""""""""""""""""""
+   autocmd FileType vim map <buffer> <leader><space> :w!<cr>:source %<cr>
+
+
+   """"""""""""""""""""""""""""""
+   " HTML related
+   """"""""""""""""""""""""""""""
+   " HTML entities - used by xml edit plugin
+   let xml_use_xhtml = 1
+   "let xml_no_auto_nesting = 1
+
+   "To HTML
+   let html_use_css = 1
+   let html_number_lines = 0
+   let use_xhtml = 1
+
+
+   """"""""""""""""""""""""""""""
+   " Ruby & PHP section
+   """"""""""""""""""""""""""""""
+   autocmd FileType ruby map <buffer> <leader><space> :w!<cr>:!ruby %<cr>
+   autocmd FileType php compiler php
+   autocmd FileType php map <buffer> <leader><space> <leader>cd:w<cr>:make %<cr>
+
+
+   """"""""""""""""""""""""""""""
+   " Python section
+   """"""""""""""""""""""""""""""
+   "Run the current buffer in python - ie. on leader+space
+   "au FileType python so ~/share/vim/vim72/syntax/python.vim
+   autocmd FileType python map <buffer> <leader><space> :w!<cr>:!python %<cr>
+   "autocmd FileType python so ~/vim_local/plugin/python_fold.vim
+
+   "Set some bindings up for 'compile' of python
+   autocmd FileType python set makeprg=python\ -c\ \"import\ py_compile,sys;\ sys.stderr=sys.stdout;\ py_compile.compile(r'%')\"
+   autocmd FileType python set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m
+
+   "Python iMaps
+   au FileType python set cindent
+   au FileType python inoremap <buffer> $r return
+   au FileType python inoremap <buffer> $s self
+   au FileType python inoremap <buffer> $c ##<cr>#<space><cr>#<esc>kla
+   au FileType python inoremap <buffer> $i import
+   au FileType python inoremap <buffer> $p print
+   au FileType python inoremap <buffer> $d """<cr>"""<esc>O
+
+   "invalid the 'K' action
+   au FileType python,lua nnoremap <leader>k K <Nop>
+   au FileType python,lua nnoremap <leader>j J <Nop>
+
+   au FileType python,lua nnoremap <buffer> K <Nop>
+   au FileType python,lua vnoremap <buffer> K <Nop>
+   au FileType python,lua nnoremap <buffer> J <Nop>
+   au FileType python,lua vnoremap <buffer> J <Nop>
+
+   "Run in the Python interpreter
+   function! Python_Eval_VSplit() range
+     let src = tempname()
+     let dst = tempname()
+     execute ": " . a:firstline . "," . a:lastline . "w " . src
+     execute ":!python " . src . " > " . dst
+     execute ":pedit! " . dst
+   endfunction
+   au FileType python vmap <F7> :call Python_Eval_VSplit()<cr>
+
+   """"""""""""""""""""""""""""""
+   " Cheetah section
+   """""""""""""""""""""""""""""""
+   autocmd FileType cheetah set ft=xml
+   autocmd FileType cheetah set syntax=cheetah
+
+   """""""""""""""""""""""""""""""
+   " Vim section
+   """""""""""""""""""""""""""""""
+   autocmd FileType vim set nofen
+
+   """""""""""""""""""""""""""""""
+   " Java section
+   """""""""""""""""""""""""""""""
+   au FileType java inoremap <buffer> <C-t> System.out.println();<esc>hi
+
+   "Java comments
+   autocmd FileType java source ~/vim_local/macros/jcommenter.vim
+   autocmd FileType java let b:jcommenter_class_author='Amir Salihefendic (amix@amix.dk)'
+   autocmd FileType java let b:jcommenter_file_author='Amir Salihefendic (amix@amix.dk)'
+   autocmd FileType java map <buffer> <F2> :call JCommentWriter()<cr>
+
+   "Abbr'z
+   autocmd FileType java inoremap <buffer> $pr private
+   autocmd FileType java inoremap <buffer> $r return
+   autocmd FileType java inoremap <buffer> $pu public
+   autocmd FileType java inoremap <buffer> $i import
+   autocmd FileType java inoremap <buffer> $b boolean
+   autocmd FileType java inoremap <buffer> $v void
+   autocmd FileType java inoremap <buffer> $s String
+
+   "Folding
+   function! JavaFold()
+     setl foldmethod=syntax
+     setl foldlevelstart=1
+     syn region foldBraces start=/{/ end=/}/ transparent fold keepend extend
+     syn match foldImports /\(\n\?import.\+;\n\)\+/ transparent fold
+
+     function! FoldText()
+       return substitute(getline(v:foldstart), '{.*', '{...}', '')
+     endfunction
+     setl foldtext=FoldText()
+   endfunction
+   au FileType java call JavaFold()
+   au FileType java setl fen
+
+   au BufEnter *.sablecc,*.scc set ft=sablecc
+
+   """"""""""""""""""""""""""""""
+   " JavaScript section
+   """""""""""""""""""""""""""""""
+   au FileType javascript so ~/vim_local/syntax/javascript.vim
+   function! JavaScriptFold()
+     setl foldmethod=syntax
+     setl foldlevelstart=1
+     syn region foldBraces start=/{/ end=/}/ transparent fold keepend extend
+
+     function! FoldText()
+       return substitute(getline(v:foldstart), '{.*', '{...}', '')
+     endfunction
+     setl foldtext=FoldText()
+   endfunction
+   au FileType javascript call JavaScriptFold()
+   au FileType javascript setl fen
+
+   au FileType javascript imap <c-t> console.log();<esc>hi
+   au FileType javascript imap <c-a> alert();<esc>hi
+   au FileType javascript setl nocindent
+   au FileType javascript inoremap <buffer> $r return
+
+   au FileType javascript inoremap <buffer> $d //<cr>//<cr>//<esc>ka<space>
+   au FileType javascript inoremap <buffer> $c /**<cr><space><cr>**/<esc>ka
+
+
+   """"""""""""""""""""""""""""""
+   " HTML
+   """""""""""""""""""""""""""""""
+   au FileType html,cheetah set ft=xml
+   au FileType html,cheetah set syntax=html
+
+
+   """"""""""""""""""""""""""""""
+   " C mappings
+   """""""""""""""""""""""""""""""
+   autocmd FileType c map <buffer> <leader><space> :w<cr>:!gcc -g %<cr>
+   autocmd FileType cpp map <buffer> <leader><space> :w<cr>:!g++ -g %<cr>
+
+
+   """""""""""""""""""""""""""""""
+   " SML
+   """""""""""""""""""""""""""""""
+   autocmd FileType sml map <silent> <buffer> <leader><space> <leader>cd:w<cr>:!sml %<cr>
+
+
+   """"""""""""""""""""""""""""""
+   " Scheme bidings
+   """"""""""""""""""""""""""""""
+   autocmd BufNewFile,BufRead *.scm map <buffer> <leader><space> <leader>cd:w<cr>:!petite %<cr>
+   autocmd BufNewFile,BufRead *.scm inoremap <buffer> <C-t> (pretty-print )<esc>i
+   autocmd BufNewFile,BufRead *.scm vnoremap <C-t> <esc>`>a)<esc>`<i(pretty-print <esc>
+
+
+   """"""""""""""""""""""""""""""
+   " SVN section
+   """""""""""""""""""""""""""""""
+   map <F9> :new<CR>:read !svn diff<CR>:set syntax=diff buftype=nofile<CR>gg
+
+
+""""""""""""""""""""""""""""""
+" Snippets
+"""""""""""""""""""""""""""""""
+   "You can use <c-j> to goto the next <++> - it is pretty smart ;)
+
+   """""""""""""""""""""""""""""""
+   " Python
+   """""""""""""""""""""""""""""""
+   autocmd FileType python inorea <buffer> cfun <c-r>=IMAP_PutTextWithMovement("def <++>(<++>):\n<++>\nreturn <++>")<cr>
+   autocmd FileType python inorea <buffer> cclass <c-r>=IMAP_PutTextWithMovement("class <++>:\n<++>")<cr>
+   autocmd FileType python inorea <buffer> cfor <c-r>=IMAP_PutTextWithMovement("for <++> in <++>:\n<++>")<cr>
+   autocmd FileType python inorea <buffer> cif <c-r>=IMAP_PutTextWithMovement("if <++>:\n<++>")<cr>
+   autocmd FileType python inorea <buffer> cifelse <c-r>=IMAP_PutTextWithMovement("if <++>:\n<++>\nelse:\n<++>")<cr>
+
+
+   """""""""""""""""""""""""""""""
+   " JavaScript
+   """""""""""""""""""""""""""""""
+   autocmd FileType cheetah,html,javascript inorea <buffer> cfun <c-r>=IMAP_PutTextWithMovement("function <++>(<++>) {\n<++>;\nreturn <++>;\n}")<cr>
+   autocmd filetype cheetah,html,javascript inorea <buffer> cfor <c-r>=IMAP_PutTextWithMovement("for(<++>; <++>; <++>) {\n<++>;\n}")<cr>
+   autocmd FileType cheetah,html,javascript inorea <buffer> cif <c-r>=IMAP_PutTextWithMovement("if(<++>) {\n<++>;\n}")<cr>
+   autocmd FileType cheetah,html,javascript inorea <buffer> cifelse <c-r>=IMAP_PutTextWithMovement("if(<++>) {\n<++>;\n}\nelse {\n<++>;\n}")<cr>
+
+
+   """""""""""""""""""""""""""""""
+   " HTML
+   """""""""""""""""""""""""""""""
+   autocmd FileType cheetah,html inorea <buffer> cahref <c-r>=IMAP_PutTextWithMovement('<a href="<++>"><++></a>')<cr>
+   autocmd FileType cheetah,html inorea <buffer> cbold <c-r>=IMAP_PutTextWithMovement('<b><++></b>')<cr>
+   autocmd FileType cheetah,html inorea <buffer> cimg <c-r>=IMAP_PutTextWithMovement('<img src="<++>" alt="<++>" />')<cr>
+   autocmd FileType cheetah,html inorea <buffer> cpara <c-r>=IMAP_PutTextWithMovement('<p><++></p>')<cr>
+   autocmd FileType cheetah,html inorea <buffer> ctag <c-r>=IMAP_PutTextWithMovement('<<++>><++></<++>>')<cr>
+   autocmd FileType cheetah,html inorea <buffer> ctag1 <c-r>=IMAP_PutTextWithMovement("<<++>><cr><++><cr></<++>>")<cr>
+
+
+   """""""""""""""""""""""""""""""
+   " Java
+   """""""""""""""""""""""""""""""
+   autocmd FileType java inorea <buffer> cfun <c-r>=IMAP_PutTextWithMovement("public<++> <++>(<++>) {\n<++>;\nreturn <++>;\n}")<cr>
+   autocmd FileType java inorea <buffer> cfunpr <c-r>=IMAP_PutTextWithMovement("private<++> <++>(<++>) {\n<++>;\nreturn <++>;\n}")<cr>
+   autocmd FileType java inorea <buffer> cfor <c-r>=IMAP_PutTextWithMovement("for(<++>; <++>; <++>) {\n<++>;\n}")<cr>
+   autocmd FileType java inorea <buffer> cif <c-r>=IMAP_PutTextWithMovement("if(<++>) {\n<++>;\n}")<cr>
+   autocmd FileType java inorea <buffer> cifelse <c-r>=IMAP_PutTextWithMovement("if(<++>) {\n<++>;\n}\nelse {\n<++>;\n}")<cr>
+   autocmd FileType java inorea <buffer> cclass <c-r>=IMAP_PutTextWithMovement("class <++> <++> {\n<++>\n}")<cr>
+   autocmd FileType java inorea <buffer> cmain <c-r>=IMAP_PutTextWithMovement("public static void main(String[] argv) {\n<++>\n}")<cr>
+
+
+   "Presse c-q insted of space (or other key) to complete the snippet
+   imap <C-q> <C-]>
+
+   """""""""""""""""""""""""""""""
+   " Lua
+   """""""""""""""""""""""""""""""
+   autocmd FileType lua map <buffer> <leader><space> :w!<cr>:!lua %<cr>
+   " lua 使用熟悉了的配色方案
+   autocmd Filetype lua set t_Co=256
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Cope
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"For Cope
+map <silent> <leader><cr> :noh<cr>
+
+"Orginal for all
+map <leader>n :cn<cr>
+map <leader>p :cp<cr>
+map <leader>c :botright cw 10<cr>
+map <c-u> <c-l><c-j>:q<cr>:botright cw 10<cr>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" MISC
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"Remove the Windows ^M
+noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
+
+"Paste toggle - when pasting something in, don't indent.
+set pastetoggle=<F3>
+
+"Remove indenting on empty lines
+map <F2> :%s/\s*$//g<cr>:noh<cr>''
+
+"Super paste
+inoremap <C-v> <esc>:set paste<cr>mui<C-R>+<esc>mv'uV'v=:set nopaste<cr>
+
+"A function that inserts links & anchors on a TOhtml export.
+" Notice:
+" Syntax used is:
+" Link
+" Anchor
+function! SmartTOHtml()
+   TOhtml
+   try
+    %s/&quot;\s\+\*&gt; \(.\+\)</" <a href="#\1" style="color: cyan">\1<\/a></g
+    %s/&quot;\(-\|\s\)\+\*&gt; \(.\+\)</" \&nbsp;\&nbsp; <a href="#\2" style="color: cyan;">\2<\/a></g
+    %s/&quot;\s\+=&gt; \(.\+\)</" <a name="\1" style="color: #fff">\1<\/a></g
+   catch
+   endtry
+   exe ":write!"
+   exe ":bd"
+endfunction
+
+" Gtags-cscope
+set csprg=gtags-cscope
+cs add GTAGS
+
+" Ctags
+set tags=../tags
+
+" Reset tags
+map <F12> :!gtags<CR> :cs reset<CR> :!/usr/local/bin/exctags -R<CR> :set tags=tags<CR>
+map <leader>tt :cd ..<CR>:!ctags -R ./<CR> :set tags=../tags<CR>
+map <leader>ttt :!ctags -R ./<CR> :set tags=tags<CR>
+
+" GDB
+"syntax enable		              	" enable syntax highlighting
+set previewheight=52        		" set gdb window initial height
+"run macros/gdb_mappings.vim   	" source key mappings listed in this document
+"set asm=0               				" don't show any assembly stuff
+"set gdbprg=gdb              		" set GDB invocation string (default 'gdb')
+set splitright
+set nosplitbelow
+hi Normal   guifg=White guibg=grey20
+
