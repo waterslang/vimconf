@@ -44,7 +44,7 @@ syntax on
 set t_Co=256
 
 "设置搜索时忽略大小写
-set ignorecase
+"set ignorecase
 
 "设置在Vim中可以使用鼠标 防止在Linux终端下无法拷贝
 set mouse=a
@@ -103,7 +103,7 @@ set statusline=\ %F%m%r%h\ %w\ Line:\ %l/%L:%c
 """"""""""""""""""""""""""""""
 " Minibuffer
 """"""""""""""""""""""""""""""
-"let g:miniBufExplMapWindowNavVim = 1
+let g:miniBufExplMapWindowNavVim = 1
 " To enable the optional mapping of Control + Arrow Keys to window movement
 let g:miniBufExplMapWindowNavArrows = 1 
 "let g:miniBufExplSplitBelow = 1
@@ -124,7 +124,8 @@ let g:mapleader = ","
 nmap <leader>f :!find 
 
 "Fast reloading of the .vimrc
-map <leader>s :source ~/.vimrc<cr>
+autocmd FileType vim map <buffer> <leader><space> :w!<cr>:source %<cr>
+"map <leader>s :source ~/.vimrc<cr>
 "Fast editing of .vimrc
 map <leader>e :e! ~/.vimrc<cr>
 
@@ -161,5 +162,61 @@ nmap <leader>26 :b 26<cr>
 nmap <leader>27 :b 27<cr>
 nmap <leader>28 :b 28<cr>
 nmap <leader>29 :b 29<cr>
+
+""""""""""""""""""""""""""""""
+" Visual
+""""""""""""""""""""""""""""""
+" From an idea by Michael Naumann: 实现选定区域的search
+function! VisualSearch(direction) range
+  let l:saved_reg = @"
+  execute "normal! vgvy"
+  let l:pattern = escape(@", '\\/.*$^~[]')
+  let l:pattern = substitute(l:pattern, "\n$", "", "")
+  if a:direction == 'b'
+    execute "normal ?" . l:pattern . "^M"
+  else
+    execute "normal /" . l:pattern . "^M"
+  endif
+  let @/ = l:pattern
+  let @" = l:saved_reg
+endfunction
+
+"Basically you press * or # to search for the current selection !! Really useful
+vnoremap <silent> * :call VisualSearch('f')<CR>
+vnoremap <silent> # :call VisualSearch('b')<CR>
+
+"""""""""""""""FileType settings"""""""""""""""
+autocmd FileType python map <buffer> <leader><space> :w!<cr>:!python %<cr>
+autocmd FileType lua map <buffer> <leader><space> :w!<cr>:!lua %<cr>
+
+au FileType java inoremap <buffer> <C-p> System.out.println();<esc>hi
+
+   """"""""""""""""""""""""""""""
+   " C mappings
+   """""""""""""""""""""""""""""""
+   autocmd FileType c map <buffer> <leader><space> :w<cr>:!gcc -g %<cr>
+   autocmd FileType cpp map <buffer> <leader><space> :w<cr>:!g++ -g %<cr>
+
+
+
+"invalid the 'K' action
+au FileType python,lua nnoremap <leader>k K <Nop>
+au FileType python,lua nnoremap <leader>j J <Nop>
+
+au FileType python,lua nnoremap <buffer> K <Nop>
+au FileType python,lua vnoremap <buffer> K <Nop>
+au FileType python,lua nnoremap <buffer> J <Nop>
+au FileType python,lua vnoremap <buffer> J <Nop>
+
+
+" Ctags
+set tags=../tags
+
+" Reset tags
+map <F12> :!gtags<CR> :cs reset<CR> :!/usr/local/bin/exctags -R<CR> :set tags=tags<CR>
+map <leader>tt :cd ..<CR>:!ctags -R ./<CR> :set tags=../tags<CR>
+map <leader>ttt :!ctags -R ./<CR> :set tags=tags<CR>
+
+
 
 
