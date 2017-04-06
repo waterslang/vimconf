@@ -5,5 +5,3 @@ just for test commit
 
 -- add .vimrc 
 
-test file reset
-
