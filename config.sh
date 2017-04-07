@@ -12,7 +12,7 @@ echo "config.sh >> link vimrc to ~/.vimrc ..."
 ln -s "$VIM_CONF_PATH/vimrc" ~/.vimrc
 
 echo "config.sh git submoule update --init    to clone vundle ..  "
-git submodule update --init
+git submodule update --init --recursive
 echo "config.sh >> install all plugins of vundle_cfg.vim ..."
 vim +PluginInstall +qall
 
