@@ -46,9 +46,6 @@ set t_Co=256
 "设置搜索时忽略大小写
 "set ignorecase
 
-"设置在Vim中可以使用鼠标 防止在Linux终端下无法拷贝, 设置后鼠标拷贝将有问题！
-"set mouse=a
-
 "设置Tab宽度
 set tabstop=4
 "设置自动对齐空格数
@@ -59,11 +56,17 @@ set softtabstop=4
 set smarttab
 "禁止将Tab键自动转换成空格  如果开启, 真正需要Tab键时使用[Ctrl + V + Tab]
 set noexpandtab
-"
+
 ""设置编码方式
 set encoding=utf-8
 "自动判断编码时 依次尝试一下编码
 set fileencodings=utf-8,cp936,gb18030,ucs-bom,big5,euc-jp,euc-kr,latin1
+
+" 命令行提示菜单， 按e 时能在buff提示文件
+set wildmenu
+
+" 命令行高度
+set cmdheight=2
 
 "设置换行符为unix
 set ff=unix
@@ -89,7 +92,7 @@ set statusline=\ %F%m%r%h\ %w\ Line:\ %l/%L:%c
 let g:miniBufExplMapWindowNavVim = 1
 " To enable the optional mapping of Control + Arrow Keys to window movement
 let g:miniBufExplMapWindowNavArrows = 1 
-"let g:miniBufExplSplitBelow = 1
+let g:miniBufExplSplitBelow = 1
 autocmd BufRead,BufNew :call UMiniBufExplorer
 
 "Use the arrows to something usefull
@@ -116,35 +119,7 @@ map <leader>e :e! ~/.vimrc<cr>
 " quick tab
 nmap <leader><Tab> :bn<cr>
 nmap <leader>k :bp<cr>
-nmap <leader>,, :b 1<cr>
-nmap <leader>,2 :b 2<cr>
-nmap <leader>3 :b 3<cr>
-nmap <leader>4 :b 4<cr>
-nmap <leader>5 :b 5<cr>
-nmap <leader>6 :b 6<cr>
-nmap <leader>7 :b 7<cr>
-nmap <leader>8 :b 8<cr>
-nmap <leader>9 :b 9<cr>
-nmap <leader>10 :b 10<cr>
-nmap <leader>11 :b 11<cr>
-nmap <leader>12 :b 12<cr>
-nmap <leader>13 :b 13<cr>
-nmap <leader>14 :b 14<cr>
-nmap <leader>15 :b 15<cr>
-nmap <leader>16 :b 16<cr>
-nmap <leader>17 :b 17<cr>
-nmap <leader>18 :b 18<cr>
-nmap <leader>19 :b 19<cr>
-nmap <leader>20 :b 20<cr>
-nmap <leader>21 :b 21<cr>
-nmap <leader>22 :b 22<cr>
-nmap <leader>23 :b 23<cr>
-nmap <leader>24 :b 24<cr>
-nmap <leader>25 :b 25<cr>
-nmap <leader>26 :b 26<cr>
-nmap <leader>27 :b 27<cr>
-nmap <leader>28 :b 28<cr>
-nmap <leader>29 :b 29<cr>
+so $VIM_CONF_PATH/q_nmap.vim
 
 """"""""""""""""""""""""""""""
 " Visual

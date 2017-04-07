@@ -6,4 +6,4 @@ source evn.sh
 ./config.sh
 
 notice:
-	vim +PluginInstall +all	    will install plugin in .vim/bundle/, not ur own path
+	vim +PluginInstall +all	    will install plugin in .vim/bundle/, not git clone path

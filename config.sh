@@ -14,6 +14,6 @@ ln -s "$VIM_CONF_PATH/vimrc" ~/.vimrc
 echo "config.sh git submoule update --init    to clone vundle ..  "
 git submodule update --init
 echo "config.sh >> install all plugins of vundle_cfg.vim ..."
-vim +PluginInstall +all
+vim +PluginInstall +qall
 
 echo "config.sh >> config ok"
