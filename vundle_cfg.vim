@@ -3,7 +3,7 @@
 " vundle config begin
 " -------------------------------
 filetype off
-set rtp+=~/work/vimconf/bundle/vundle
+set rtp+=$VIM_CONF_PATH/bundle/vundle
 
 call vundle#begin()
 

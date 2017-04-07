@@ -1,7 +1,9 @@
 # vimconf
 config of vim .vim with vundle
 
-just for test commit
+install:
+source evn.sh
+./config.sh
 
--- add .vimrc 
-
+notice:
+	vim +PluginInstall +all	    will install plugin in .vim/bundle/, not ur own path

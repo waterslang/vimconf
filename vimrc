@@ -46,8 +46,8 @@ set t_Co=256
 "设置搜索时忽略大小写
 "set ignorecase
 
-"设置在Vim中可以使用鼠标 防止在Linux终端下无法拷贝
-set mouse=a
+"设置在Vim中可以使用鼠标 防止在Linux终端下无法拷贝, 设置后鼠标拷贝将有问题！
+"set mouse=a
 
 "设置Tab宽度
 set tabstop=4
@@ -77,25 +77,8 @@ filetype plugin on
 "启动智能补全
 filetype plugin indent on
 
-" -------------------------------
-" vundle config begin
-" -------------------------------
-filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
-
-call vundle#begin()
-
-Plugin 'VundleVim/Vundle.vim'
-
-" original repos
-
-Bundle 'taglist.vim'
-Bundle 'fholgado/minibufexpl.vim'
-
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-
+"""""""""""""" vundle """""""""""""""
+so $VIM_CONF_PATH/vundle_cfg.vim
 
 "Format the statusline
 set statusline=\ %F%m%r%h\ %w\ Line:\ %l/%L:%c
