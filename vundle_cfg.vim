@@ -10,6 +10,7 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 " original repos
+Plugin 'scrooloose/syntastic'
 
 Bundle 'tomasr/molokai'
 Bundle 'taglist.vim'
