@@ -29,6 +29,10 @@ set noswapfile
 set cursorline
 "set cursorcolumn
 
+set incsearch
+set hlsearch
+
+
 "设置匹配模式 类似当输入一个左括号时会匹配相应的那个右括号
 set showmatch
 
@@ -149,11 +153,11 @@ autocmd FileType lua map <buffer> <leader><space> :w!<cr>:!lua %<cr>
 
 au FileType java inoremap <buffer> <C-p> System.out.println();<esc>hi
 
-   """"""""""""""""""""""""""""""
-   " C mappings
-   """""""""""""""""""""""""""""""
-   autocmd FileType c map <buffer> <leader><space> :w<cr>:!gcc -g %<cr>
-   autocmd FileType cpp map <buffer> <leader><space> :w<cr>:!g++ -g %<cr>
+""""""""""""""""""""""""""""""
+" C mappings
+"""""""""""""""""""""""""""""""
+autocmd FileType c map <buffer> <leader><space> :w<cr>:!gcc -g %<cr>
+autocmd FileType cpp map <buffer> <leader><space> :w<cr>:!g++ -g %<cr>
 
 
 
@@ -174,6 +178,10 @@ set tags=../tags
 map <F12> :!gtags<CR> :cs reset<CR> :!/usr/local/bin/exctags -R<CR> :set tags=tags<CR>
 map <leader>tt :cd ..<CR>:!ctags -R ./<CR> :set tags=../tags<CR>
 map <leader>ttt :!ctags -R ./<CR> :set tags=tags<CR>
+
+"""""""""""""""""" color """""""""""""""""""""
+se background=dark
+colorscheme molokai
 
 
 
