@@ -13,7 +13,7 @@ set number
 "设置在编辑过程中右下角显示光标的行列信息
 set ruler
 "当一行文字很长时取消换行
-set nowrap
+"set nowrap
 
 "在状态栏显示正在输入的命令
 set showcmd
@@ -176,13 +176,12 @@ set tags=../tags
 
 " Reset tags
 map <F12> :!gtags<CR> :cs reset<CR> :!/usr/local/bin/exctags -R<CR> :set tags=tags<CR>
-map <leader>tt :cd ..<CR>:!ctags -R ./<CR> :set tags=../tags<CR>
+" use --exclude multi times ! 
+map <leader>tt :cd ..<CR>:!ctags --exclude=libs --exclude=others -R ./<CR> :set tags=../tags<CR>
 map <leader>ttt :!ctags -R ./<CR> :set tags=tags<CR>
 
 """""""""""""""""" color """""""""""""""""""""
 se background=dark
 colorscheme molokai
-
-
 
 
