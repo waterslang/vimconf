@@ -5,7 +5,10 @@
 "关闭vi的一致性模式 避免以前版本的一些Bug和局限
 set nocompatible
 "配置backspace键工作方式
-set backspace=indent,eol,start
+set backspace=eol,start,indent
+
+"Bbackspace and cursor keys wrap to, 使得v模式下h可以回退掉换行
+set whichwrap+=<,>,h,l
 
 "显示行号
 set number
@@ -36,10 +39,6 @@ set hlsearch
 "设置匹配模式 类似当输入一个左括号时会匹配相应的那个右括号
 set showmatch
 
-"设置C/C++方式自动对齐
-set autoindent
-set cindent
-
 "开启语法高亮功能
 syntax enable
 syntax on
@@ -61,8 +60,14 @@ set smarttab
 "禁止将Tab键自动转换成空格  如果开启, 真正需要Tab键时使用[Ctrl + V + Tab]
 set noexpandtab
 
+"设置C/C++方式自动对齐
+set autoindent
+set cindent
+set smarttab
+
+
 ""设置编码方式
-set encoding=utf-8
+"set encoding=utf-8
 "自动判断编码时 依次尝试一下编码
 set fileencodings=utf-8,cp936,gb18030,ucs-bom,big5,euc-jp,euc-kr,latin1
 
@@ -78,11 +83,15 @@ set ff=unix
 "检测文件类型
 filetype on
 "针对不同的文件采用不同的缩进方式
-filetype indent on
+"filetype indent on
 "允许插件
 filetype plugin on
 "启动智能补全
-filetype plugin indent on
+"filetype plugin indent on
+
+"Restore cursor to file position in previous editing session
+set viminfo='10,\"100,:20,%,n~/.viminfo'
+au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|else|exe "norm $"|endif|endif
 
 """""""""""""" vundle """""""""""""""
 so $VIM_CONF_PATH/vundle_cfg.vim
@@ -111,7 +120,25 @@ map <left> :bp<cr>
 let mapleader = ","
 let g:mapleader = ","
 
-nmap <leader>f :!find 
+function! CurWordCtrlSF() range
+  let l:saved_reg = @"
+  execute "normal! bye"
+  let l:pattern = escape(@", '\\/.*$^~[]')
+  " 无效
+  "execute "normal <Plug>CtrlSFPrompt " . l:pattern 
+  " 会显示搜索空
+  "execute ":CtrlSF " . l:pattern . "^M"
+  execute ":CtrlSF " . l:pattern 
+  let @/ = l:pattern
+  let @" = l:saved_reg
+endfunction
+
+nmap <leader>f :call CurWordCtrlSF()<CR>
+
+"nmap <leader>f :!find 
+"nmap <C-F> <Plug>CtrlSFPrompt
+nmap <C-F> <Plug>CtrlSFPrompt holyshit
+nmap <C-F>f :!find 
 
 "Fast reloading of the .vimrc
 autocmd FileType vim map <buffer> <leader><space> :w!<cr>:source %<cr>
@@ -178,7 +205,7 @@ set tags=../tags
 map <F12> :!gtags<CR> :cs reset<CR> :!/usr/local/bin/exctags -R<CR> :set tags=tags<CR>
 " use --exclude multi times ! 
 map <leader>tt :cd ..<CR>:!ctags --exclude=libs --exclude=others -R ./<CR> :set tags=../tags<CR>
-map <leader>ttt :!ctags -R ./<CR> :set tags=tags<CR>
+map <leader>ttt :!ctags --exclude=Lib --exclude=libs --exclude=others -R ./<CR> :set tags=tags<CR>
 
 """""""""""""""""" color """""""""""""""""""""
 se background=dark

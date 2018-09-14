@@ -10,15 +10,17 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 " original repos
-Plugin 'scrooloose/syntastic'
+" Plugin 'scrooloose/syntastic'
 Plugin 'luochen1990/rainbow'
 Plugin 'Lokaltog/vim-easymotion'
 Plugin 'Townk/vim-autoclose'
 Plugin 'kien/ctrlp.vim'
-Plugin 'valloric/youcompleteme'
+Plugin 'dyng/ctrlsf.vim'
+Plugin 'vim-airline/vim-airline'
+" Plugin 'valloric/youcompleteme'
 
 Bundle 'tomasr/molokai'
-Bundle 'taglist.vim'
+" Bundle 'taglist.vim'
 Bundle 'fholgado/minibufexpl.vim'
 Bundle 'altercation/vim-colors-solarized'
 
