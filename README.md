@@ -2,7 +2,7 @@
 config of vim .vim with vundle
 
 install:
-source evn.sh
+source env.sh
 ./config.sh
 
 notice:
